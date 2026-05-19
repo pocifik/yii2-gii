@@ -25,33 +25,17 @@ echo "<?php\n";
 
 namespace <?= $generator->queryNs ?>;
 
+use common\base\BaseRepository;
+
 /**
- * This is the ActiveQuery class for [[<?= $modelFullClassName ?>]].
+ * This is the Repository class for [[<?= $modelFullClassName ?>]].
  *
  * @see <?= $modelFullClassName . "\n" ?>
  */
-class <?= $className ?> extends <?= '\\' . ltrim($generator->queryBaseClass, '\\') . "\n" ?>
+class <?= $className ?> extends BaseRepository
 {
-    /*public function active()
+    public static function getById(int $id): ?<?= $modelFullClassName ?>
     {
-        return $this->andWhere('[[status]]=1');
-    }*/
-
-    /**
-     * {@inheritdoc}
-     * @return <?= $modelFullClassName ?>[]|array
-     */
-    public function all($db = null)
-    {
-        return parent::all($db);
-    }
-
-    /**
-     * {@inheritdoc}
-     * @return <?= $modelFullClassName ?>|array|null
-     */
-    public function one($db = null)
-    {
-        return parent::one($db);
+        return <?= $modelFullClassName ?>::find()->where(['id' => $id])->one();
     }
 }

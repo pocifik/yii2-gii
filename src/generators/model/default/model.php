@@ -20,39 +20,20 @@
 echo "<?php\n";
 ?>
 
-namespace <?= $generator->ns ?>;
+namespace <?= $generator->ns . '/db/' . $generator->nsSuffix ?>;
 
 use Yii;
+use common\base\ActiveRecord;
 
 /**
- * This is the model class for table "<?= $generator->generateTableName($tableName) ?>".
+ * This is the db model class for table "<?= $generator->generateTableName($tableName) ?>".
  *
 <?php foreach ($properties as $property => $data): ?>
  * @property <?= "{$data['type']} \${$property}" . ($data['comment'] ? ' ' . strtr($data['comment'], ["\n" => ' ']) : '') . "\n" ?>
 <?php endforeach; ?>
-<?php if (!empty($relations)): ?>
- *
-<?php foreach ($relations as $name => $relation): ?>
- * @property <?= $relation[1] . ($relation[2] ? '[]' : '') . ' $' . lcfirst($name) . "\n" ?>
-<?php endforeach; ?>
-<?php endif; ?>
  */
-class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . "\n" ?>
+class <?= $className ?> extends ActiveRecord
 {
-
-<?php if (!empty($enum)): ?>
-    /**
-     * ENUM field values
-     */
-<?php
-    foreach ($enum as $columnName => $columnData) {
-        foreach ($columnData['values'] as $enumValue) {
-            echo '    const ' . $enumValue['constName'] . ' = \'' . $enumValue['value'] . '\';' . PHP_EOL;
-        }
-    }
-endif
-?>
-
     /**
      * {@inheritdoc}
      */
@@ -90,79 +71,4 @@ endif
 <?php endforeach; ?>
         ];
     }
-<?php foreach ($relations as $name => $relation): ?>
-
-    /**
-     * Gets query for [[<?= $name ?>]].
-     *
-     * @return <?= $relationsClassHints[$name] . "\n" ?>
-     */
-    public function get<?= $name ?>()
-    {
-        <?= $relation[0] . "\n" ?>
-    }
-<?php endforeach; ?>
-<?php if ($queryClassName): ?>
-<?php
-    $queryClassFullName = ($generator->ns === $generator->queryNs) ? $queryClassName : '\\' . $generator->queryNs . '\\' . $queryClassName;
-    echo "\n";
-?>
-    /**
-     * {@inheritdoc}
-     * @return <?= $queryClassFullName ?> the active query used by this AR class.
-     */
-    public static function find()
-    {
-        return new <?= $queryClassFullName ?>(get_called_class());
-    }
-<?php endif; ?>
-
-<?php if ($enum): ?>
-<?php     foreach ($enum as $columnName => $columnData): ?>
-
-    /**
-     * column <?= $columnName ?> ENUM value labels
-     * @return string[]
-     */
-    public static function <?= $columnData['funcOptsName'] ?>()
-    {
-        return [
-<?php         foreach ($columnData['values'] as $k => $value): ?>
-<?php
-        if ($generator->enableI18N) {
-            echo '            self::' . $value['constName'] . ' => Yii::t(\'' . $generator->messageCategory . '\', \'' . $value['value'] . "'),\n";
-        } else {
-            echo '            self::' . $value['constName'] . ' => \'' . $value['value'] . "',\n";
-        }
-    ?>
-<?php         endforeach; ?>
-        ];
-    }
-<?php     endforeach; ?>
-<?php     foreach ($enum as $columnName => $columnData): ?>
-
-    /**
-     * @return string
-     */
-    public function <?= $columnData['displayFunctionPrefix'] ?>()
-    {
-        return self::<?= $columnData['funcOptsName'] ?>()[$this-><?=$columnName?>];
-    }
-<?php         foreach ($columnData['values'] as $enumValue): ?>
-
-    /**
-     * @return bool
-     */
-    public function <?= $columnData['isFunctionPrefix'] . $enumValue['functionSuffix'] ?>()
-    {
-        return $this-><?= $columnName ?> === self::<?= $enumValue['constName'] ?>;
-    }
-
-    public function <?= $columnData['setFunctionPrefix'] . $enumValue['functionSuffix'] ?>()
-    {
-        $this-><?= $columnName ?> = self::<?= $enumValue['constName'] ?>;
-    }
-<?php         endforeach; ?>
-<?php     endforeach; ?>
-<?php endif; ?>
 }

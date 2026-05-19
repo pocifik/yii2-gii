@@ -37,7 +37,9 @@ class Generator extends \yii\gii\Generator
     public const JUNCTION_RELATION_VIA_MODEL = 'model';
 
     public $db = 'db';
-    public $ns = 'app\models';
+    public $ns = 'common\models';
+
+    public $nsSuffix = '';
     /**
      * @var string
      */
@@ -49,7 +51,7 @@ class Generator extends \yii\gii\Generator
     /**
      * @var string
      */
-    public $baseClass = 'yii\db\ActiveRecord';
+    public $baseClass = 'common\base\ActiveRecord';
     public $generateRelations = self::RELATIONS_ALL;
     public $generateJunctionRelationMode = self::JUNCTION_RELATION_VIA_TABLE;
     public $useClassConstant;
@@ -69,7 +71,7 @@ class Generator extends \yii\gii\Generator
     /**
      * @var string
      */
-    public $queryBaseClass = 'yii\db\ActiveQuery';
+    public $queryBaseClass = 'common\base\BaseRepository';
 
     /**
      * @var string[]|null
@@ -120,7 +122,7 @@ class Generator extends \yii\gii\Generator
                     return $value === null ? null : trim($value, ' \\');
                 }
             ],
-            [['db', 'ns', 'tableName', 'baseClass', 'queryNs', 'queryBaseClass'], 'required'],
+            [['db', 'ns', 'nsSuffix', 'tableName', 'baseClass', 'queryNs', 'queryBaseClass'], 'required'],
             [['db', 'modelClass', 'queryClass'], 'match', 'pattern' => '/^\w+$/', 'message' => 'Only word characters are allowed.'],
             [['ns', 'baseClass', 'queryNs', 'queryBaseClass'], 'match', 'pattern' => '/^[\w\\\\]+$/', 'message' => 'Only word characters and backslashes are allowed.'],
             [['tableName'], 'match', 'pattern' => '/^([\w ]+\.)?([\w\* ]+)$/', 'message' => 'Only word characters, and optionally spaces, an asterisk and/or a dot are allowed.'],
@@ -312,8 +314,18 @@ class Generator extends \yii\gii\Generator
                 'enum' => $this->getEnum($tableSchema->columns),
             ];
             $files[] = new CodeFile(
-                Yii::getAlias('@' . str_replace('\\', '/', $this->ns)) . '/' . $modelClassName . '.php',
+                Yii::getAlias('@' . str_replace('\\', '/', $this->ns . '/db/' . $this->nsSuffix)) . '/' . $modelClassName . '.php',
                 $this->render('model.php', $params)
+            );
+
+            $files[] = new CodeFile(
+                Yii::getAlias('@' . str_replace('\\', '/', $this->ns . '/base/' . $this->nsSuffix)) . '/' . $modelClassName . '.php',
+                $this->render('model_base.php', $params)
+            );
+
+            $files[] = new CodeFile(
+                Yii::getAlias('@' . str_replace('\\', '/', $this->ns . '/entity/' . $this->nsSuffix)) . '/' . $modelClassName . '.php',
+                $this->render('model_entity.php', $params)
             );
 
             // query:
@@ -321,8 +333,8 @@ class Generator extends \yii\gii\Generator
                 $params['className'] = $queryClassName;
                 $params['modelClassName'] = $modelClassName;
                 $files[] = new CodeFile(
-                    Yii::getAlias('@' . str_replace('\\', '/', $this->queryNs)) . '/' . $queryClassName . '.php',
-                    $this->render('query.php', $params)
+                    Yii::getAlias('@' . str_replace('\\', '/', $this->queryNs . '/' . $this->nsSuffix)) . '/' . $queryClassName . '.php',
+                    $this->render('model_repository.php', $params)
                 );
             }
         }
@@ -1152,7 +1164,7 @@ class Generator extends \yii\gii\Generator
     {
         $queryClassName = $this->queryClass;
         if (empty($queryClassName) || strpos($this->tableName, '*') !== false) {
-            $queryClassName = $modelClassName . 'Query';
+            $queryClassName = $modelClassName . 'Repository';
         }
         return $queryClassName;
     }
