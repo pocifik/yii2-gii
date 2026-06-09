@@ -24,7 +24,7 @@ echo "<?php\n";
 namespace <?= $generator->queryNs ?>;
 
 use common\base\BaseRepository;
-use <?= $modelFullClassName . ';' ?>;
+use <?= $modelFullClassName ?>;
 
 /**
  * This is the Repository class for [[<?= $modelClassName ?>]].
