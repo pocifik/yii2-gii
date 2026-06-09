@@ -16,9 +16,7 @@
 /** @var string $modelClassName related model class name */
 
 $modelFullClassName = $modelClassName;
-if ($generator->ns !== $generator->queryNs) {
-    $modelFullClassName = '\\' . $generator->ns . '\\' . $modelFullClassName;
-}
+$modelFullClassName = $generator->ns . '\entity\\' . $generator->nsSuffix . '\\' . $modelFullClassName;
 
 echo "<?php\n";
 ?>
@@ -26,16 +24,17 @@ echo "<?php\n";
 namespace <?= $generator->queryNs ?>;
 
 use common\base\BaseRepository;
+use <?= $modelFullClassName . ';' ?>;
 
 /**
- * This is the Repository class for [[<?= $modelFullClassName ?>]].
+ * This is the Repository class for [[<?= $modelClassName ?>]].
  *
- * @see <?= $modelFullClassName . "\n" ?>
+ * @see <?= $modelClassName . "\n" ?>
  */
 class <?= $className ?> extends BaseRepository
 {
-    public static function getById(int $id): ?<?= $modelFullClassName ?>
+    public static function getById(int $id): ?<?= $modelClassName . "\n" ?>
     {
-        return <?= $modelFullClassName ?>::find()->where(['id' => $id])->one();
+        return <?= $modelClassName ?>::find()->where(['id' => $id])->one();
     }
 }
