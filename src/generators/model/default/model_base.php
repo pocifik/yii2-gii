@@ -20,10 +20,10 @@
 echo "<?php\n";
 ?>
 
-namespace <?= $generator->ns . '/base/' . $generator->nsSuffix ?>;
+namespace <?= $generator->ns . '\base\\' . $generator->nsSuffix ?>;
 
 use Yii;
-use <?= $generator->ns . '/db/' . $generator->nsSuffix . '/' . $className . ' as ' . $className . 'Db' ?>
+use <?= $generator->ns . '\db\\' . $generator->nsSuffix . '\\' . $className . ' as ' . $className . 'Db' ?>
 
 /**
  * This is the base model class for table "<?= $generator->generateTableName($tableName) ?>".
@@ -35,8 +35,9 @@ use <?= $generator->ns . '/db/' . $generator->nsSuffix . '/' . $className . ' as
 <?php endforeach; ?>
 <?php endif; ?>
  */
-class <?= $className ?> extends <?= $className . 'Db' ?>
+class <?= $className ?> extends <?= $className . 'Db' . "\n" ?>
 {
+
 <?php foreach ($relations as $name => $relation): ?>
 
     /**

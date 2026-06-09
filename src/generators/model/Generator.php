@@ -243,7 +243,7 @@ class Generator extends \yii\gii\Generator
     {
         $templates = ['model.php'];
         if ($this->queryClass !== null) {
-            $templates[] = 'query.php';
+            $templates[] = 'model_repository.php';
         }
 
         return $templates;

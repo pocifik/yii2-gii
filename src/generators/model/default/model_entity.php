@@ -20,15 +20,15 @@
 echo "<?php\n";
 ?>
 
-namespace <?= $generator->ns . '/entity/' . $generator->nsSuffix ?>;
+namespace <?= $generator->ns . '\entity\\' . $generator->nsSuffix ?>;
 
 use Yii;
-use <?= $generator->ns . '/base/' . $generator->nsSuffix . '/' . $className . ' as ' . $className . 'Base' ?>
+use <?= $generator->ns . '\base\\' . $generator->nsSuffix . '\\' . $className . ' as ' . $className . 'Base' ?>
 
 /**
  * This is the entity model class for table "<?= $generator->generateTableName($tableName) ?>".
  */
-class <?= $className ?> extends <?= $className . 'Base' ?>
+class <?= $className ?> extends <?= $className . 'Base' . "\n" ?>
 {
 
 }

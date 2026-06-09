@@ -20,7 +20,7 @@
 echo "<?php\n";
 ?>
 
-namespace <?= $generator->ns . '/db/' . $generator->nsSuffix ?>;
+namespace <?= $generator->ns . '\db\\' . $generator->nsSuffix ?>;
 
 use Yii;
 use common\base\ActiveRecord;
