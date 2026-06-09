@@ -23,7 +23,7 @@ echo "<?php\n";
 namespace <?= $generator->ns . '\base\\' . $generator->nsSuffix ?>;
 
 use Yii;
-use <?= $generator->ns . '\db\\' . $generator->nsSuffix . '\\' . $className . ' as ' . $className . 'Db' ?>
+use <?= $generator->ns . '\db\\' . $generator->nsSuffix . '\\' . $className . ' as ' . $className . 'Db;' ?>
 
 /**
  * This is the base model class for table "<?= $generator->generateTableName($tableName) ?>".
