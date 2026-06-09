@@ -63,7 +63,7 @@ class Generator extends \yii\gii\Generator
     public $singularize = false;
     public $useSchemaName = true;
     public $generateQuery = false;
-    public $queryNs = 'common\models';
+    public $queryNs = 'common\models\repository';
     /**
      * @var string|null
      */
